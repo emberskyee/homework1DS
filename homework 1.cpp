@@ -8,29 +8,36 @@
 using namespace std;
 
 struct Book {
-    string title;
-    string author;
-    int wordCount;
-    map<char, int> letterFrequency;
-    int lineCount;
+	string title;
+	string author;
+	int wordCount;
+	map<char, int> letterFrequency;
+	int lineCount;
 };
 /////
 
-Book readBook(ifstream& fileName) {
-	Book book;
+Book readBook(ifstream& inputFile) {
+	Book currentBook;
 	string line;
-	ifstream inputFile("fileName");
+	string contents;
+	currentBook.wordCount = 0;
+	currentBook.lineCount = 0;
 
-	if (!inputFile.is_open()) {
+	inputFile.open("MobyDick.txt");
+
+	if (!(inputFile.is_open())) {
 		cout << "File is not open!" << endl;
-		return;
+		return currentBook;
 	}
 
 	// Read title
-	getline(inputFile, book.title);
+	getline(inputFile, currentBook.title);
 
 	// Read author
-	getline(inputFile, book.author);
+	getline(inputFile, currentBook.author);
+
+	// Contents line
+	getline(inputFile, contents);
 
 	// Count words
 	vector<string> words;
@@ -41,30 +48,28 @@ Book readBook(ifstream& fileName) {
 	}
 
 	for (const string& word : words) {
-		book.wordCount++;
+		currentBook.wordCount++;
 	}
 
 	// Count letter frequency
 	char letter;
+	currentBook.letterFrequency[letter] = 0;
+
 	for (const string& word : words) {
 		for (char letter : word) {
 			letter = tolower(letter);
 			if (isalpha(letter)) {
-				book.letterFrequency[letter]++;
+				currentBook.letterFrequency[letter]++;
 			}
 		}
 	}
 
 	// Line count
-	int lineCount = 0;
 	while (getline(inputFile, line)) {
-		book.lineCount++;
+		currentBook.lineCount++;
 	}
 
-	// Close file after reading is done
-	inputFile.close();
-
-	return book;
+	return currentBook;
 }
 ////
 
