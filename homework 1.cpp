@@ -52,9 +52,6 @@ Book readBook(ifstream& inputFile) {
 	}
 
 	// Count letter frequency
-	char letter;
-	currentBook.letterFrequency[letter] = 0;
-
 	for (const string& word : words) {
 		for (char letter : word) {
 			letter = tolower(letter);
@@ -64,6 +61,10 @@ Book readBook(ifstream& inputFile) {
 		}
 	}
 
+	// Reset line reading back to the beginning for line count
+	inputFile.clear();
+	inputFile.seekg(0, ios::beg);
+
 	// Line count
 	while (getline(inputFile, line)) {
 		currentBook.lineCount++;
@@ -72,7 +73,6 @@ Book readBook(ifstream& inputFile) {
 	return currentBook;
 }
 ////
-
 
 // write book info
 void writeToFile(const Book& book, std::ofstream& outputFile) {
@@ -112,7 +112,7 @@ int main() {
 	cout << "Enter the name of the file to be processed: ";
 	cin >> fileName;
 
-	ifstream inputFile("fileName");
+	ifstream inputFile(fileName);
 
 	while (!(inputFile.is_open())) {
 		cerr << "Error opening the file. Please enter another file name: ";
